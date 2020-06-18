@@ -129,25 +129,25 @@ sudo -u ${install_user} mkdir "${install_home}/.ssh"
 }
 
 qbittorrent(){
-adduser --system --group qbtuser &> /var/log/install.log & spinner $!
-adduser ${install_user} qbtuser &> /var/log/install.log & spinner $!
+adduser --system --group qbtuser &>> /var/log/install.log & spinner $!
+adduser ${install_user} qbtuser &>> /var/log/install.log & spinner $!
 
 add-apt-repository -y ppa:qbittorrent-team/qbittorrent-stable &> /var/log/install.log & spinner $!
-apt install -y qbittorrent-nox &> /var/log/install.log & spinner $!
+apt install -y qbittorrent-nox &>> /var/log/install.log & spinner $!
 
 echo -e '[Unit]\nDescription=qBittorrent Command Line Client\nAfter=network.target\n \n[Service]\n#Do not change to "simple"\nType=forking\nUser=qbtuser\nGroup=qbtuser\nUMask=000\nExecStart=/usr/bin/qbittorrent-nox -d\nRestart=on-failure\n \n[Install]\nWantedBy=multi-user.target' > /etc/systemd/system/qbittorrent-nox.service
 
 #Reload systemctl daemons
-systemctl daemon-reload &> /var/log/install.log & spinner $!
+systemctl daemon-reload &>> /var/log/install.log & spinner $!
 
 #Start on system
-systemctl enable qbittorrent-nox &> /var/log/install.log & spinner $!
+systemctl enable qbittorrent-nox &>> /var/log/install.log & spinner $!
 
 #start service
-systemctl start qbittorrent-nox &> /var/log/install.log & spinner $!
+systemctl start qbittorrent-nox &>> /var/log/install.log & spinner $!
 
 #show status
-systemctl status qbittorrent-nox &> /var/log/install.log & spinner $!
+systemctl status qbittorrent-nox &>> /var/log/install.log & spinner $!
 }
 
 sslqbt(){
