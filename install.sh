@@ -71,7 +71,7 @@ apt install apt-transport-https
 wget -O - https://repo.jellyfin.org/jellyfin_team.gpg.key | sudo apt-key add -
 echo "deb [arch=$( dpkg --print-architecture )] https://repo.jellyfin.org/$( awk -F'=' '/^ID=/{ print $NF }' /etc/os-release ) $( awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release ) main" | sudo tee /etc/apt/sources.list.d/jellyfin.list
 apt update
-apt install jellyfin -y
+apt install jellyfin -y &>> /var/log/install.log & spinner $!
 echo "Jellyfin installed! Use http://$IPV4:8096 to acces, ou http:localhost:8096"
 }
 
@@ -131,9 +131,12 @@ read -p "This script only tested in Ubuntu. Another OS is not supported official
 
 case choice in
 
-	"N|n")exit 1;;
-	"Y|y")main;;
-	*)echo "Option not recognized. Exiting..."
+	N | n)
+	exit 1;;
+	Y | y)
+	main;;
+	*)
+	echo "Option not recognized. Exiting..."; exit 1;;
 esac
 
 }
@@ -187,4 +190,4 @@ jellyfin
 
 }
 
- [[ "$PLAT" != "Ubuntu" ]] && main || OtherOS
+ [[ $PLAT != "Ubuntu" ]] || main && OtherOS
