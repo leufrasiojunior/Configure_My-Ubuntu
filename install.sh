@@ -127,7 +127,7 @@ openssl req -new -x509 -nodes -out server.crt -keyout server.key
 }
 
 OtherOS(){
-echo "This script only tested in Ubuntu. Another OS is not supported officialy.\nPlease, go ahead at your risk. \nType [Y]es to continue or [N]to exit: "
+echo -e "This script only tested in Ubuntu. Another OS is not supported officialy.\nPlease, go ahead at your risk. \nType [Y]es to continue or [N]to exit: "
 read choice
 
 case $choice in
