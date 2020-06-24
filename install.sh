@@ -64,11 +64,15 @@ notifyPackageUpdatesAvailable(){
 }
 
 jellyfin(){
+availableInterfaces=$(ip -o link | awk '{print $2}' | cut -d':' -f1 | cut -d'@' -f1 | grep -v -w 'lo')
+IPv4dev="${availableInterfaces}"
+IPV4=$(ip -o -f inet address show dev "${IPv4dev}" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/')
 apt install apt-transport-https
 wget -O - https://repo.jellyfin.org/jellyfin_team.gpg.key | sudo apt-key add -
 echo "deb [arch=$( dpkg --print-architecture )] https://repo.jellyfin.org/$( awk -F'=' '/^ID=/{ print $NF }' /etc/os-release ) $( awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release ) main" | sudo tee /etc/apt/sources.list.d/jellyfin.list
 apt update
 apt install jellyfin -y
+echo "Jellyfin installed! Use http://$IPV4:8096 to acces, ou http:localhost:8096"
 }
 
 chooseUser(){
@@ -92,12 +96,6 @@ install_home=$(grep -m1 "^${install_user}:" /etc/passwd | cut -d: -f6)
 install_home=${install_home%/}
 
 sudo -u ${install_user} mkdir "${install_home}/.ssh"
-availableInterfaces=$(ip -o link | awk '{print $2}' | cut -d':' -f1 | cut -d'@' -f1 | grep -v -w 'lo')
-IPv4dev="${availableInterfaces}"
-IPV4=$(ip -o -f inet address show dev "${IPv4dev}" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/')
-
-echo "Jellyfin installed! Use http://{$IPV4}:8096 to acces, ou http:localhost:8096"
-
 
 }
 
